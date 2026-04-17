@@ -1,6 +1,6 @@
 {
   "dependencies": ["."],
   "graphs": {
-    "city_agent": "./example.py:app"
+    "city_agent": "./workflow_example.py:app"
   }
 }
