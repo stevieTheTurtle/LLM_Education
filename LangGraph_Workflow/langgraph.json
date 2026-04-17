@@ -1,0 +1,6 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "city_agent": "./example.py:app"
+  }
+}
