@@ -125,9 +125,54 @@ python workflow_example.py
 
 ---
 
-## VS Code extension
+## VS Code extension — VizLang Studio
 
-Install the **LangGraph** extension from the VS Code marketplace. Each folder contains a `langgraph.json` that tells it where to find the compiled graph. Once installed, you can visualize the graph structure without running the code.
+Install **VizLang Studio** (`vkfolio.vizlangstudio`) from the VS Code marketplace. It is a standalone LangGraph development environment that lets you visualize, run, and debug your graphs without leaving the editor.
+
+Each folder in this repo already contains a `langgraph.json` that tells the extension where to find the compiled graph:
+
+```json
+{
+  "dependencies": ["."],
+  "graphs": {
+    "chatbot": "./chatbot.py:app"
+  }
+}
+```
+
+The extension imports the Python module and looks up the `app` variable at the path specified. No extra configuration is needed beyond what is already in place.
+
+### Features
+
+**Graph Visualization**
+Renders the graph as a diagram — nodes as boxes, edges as arrows, conditional branches as labeled forks. This is static: it reflects the structure of `build_graph()` without running anything. Useful for confirming your edges are wired the way you think they are.
+
+**Chat**
+A built-in input panel that lets you invoke the graph directly from VS Code without opening a terminal. You type a message, it calls `app.invoke()`, and you see the output inline. Equivalent to running `python chatbot.py` but without leaving the editor.
+
+**Tracing**
+As the graph runs, the extension highlights the currently executing node and logs the state after each step. You can see exactly what each node received from state and what it wrote back — much easier than reading `print()` output scattered across the terminal.
+
+**HITL — Human in the Loop**
+A pattern where the graph **pauses mid-execution** and waits for a human to approve, modify, or reject an intermediate result before continuing. In LangGraph this is implemented with `interrupt()` inside a node. VizLang surfaces it as a prompt in the UI: the graph halts, shows you the current state, and lets you confirm or inject new values before it resumes. Useful when an LLM decision is high-stakes and needs a review step before proceeding.
+
+**Time Travel**
+After a run completes, you can scrub backwards through execution history — rewind to any previous state snapshot and re-run the graph from that point with different inputs or after a code fix. This requires LangGraph's checkpointer to be enabled, which saves a state snapshot at each node. Without it, time travel is not available.
+
+### What the examples support out of the box
+
+The examples in this repo support **Visualization**, **Chat**, and **Tracing** with no changes. HITL and Time Travel require adding a checkpointer to `build_graph()`:
+
+```python
+from langgraph.checkpoint.memory import MemorySaver
+
+def build_graph():
+    g = StateGraph(State)
+    # ... nodes and edges ...
+    return g.compile(checkpointer=MemorySaver())
+```
+
+This is a more advanced topic — not needed to follow the learning path here.
 
 ---
 
