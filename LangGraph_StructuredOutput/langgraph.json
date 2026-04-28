@@ -1,0 +1,7 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "native": "./structured_output_native.py:app",
+    "prompted": "./structured_output_prompted.py:app"
+  }
+}
