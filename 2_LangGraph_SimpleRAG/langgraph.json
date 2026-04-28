@@ -1,0 +1,6 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "simple_rag": "./simple_rag.py:app"
+  }
+}
